@@ -1,6 +1,6 @@
 import pyautogui
 
-def Controls(message):
+def controls(message):
   while True:
     message = message.lower()
     if message == "up":

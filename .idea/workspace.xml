@@ -3,6 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="c17a0541-ba07-41c1-9a90-33d21cb4723d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitch_plays/game_controls.py" beforeDir="false" afterPath="$PROJECT_DIR$/twitch_plays/game_controls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitch_plays/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/twitch_plays/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitch_plays/twitch_plays.py" beforeDir="false" afterPath="$PROJECT_DIR$/twitch_plays/twitch_plays.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

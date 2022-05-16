@@ -31,7 +31,7 @@ def receiving_loop():
       received = ""
     
     for line in recived.split("\r\n"):
-      if "PONG" in line and not user_message(line):
+      if "PING" in line and not user_message(line):
         response = "PONG.tmi.twitch.tv\r\n".encode()
         irc.send(response)
       else:
