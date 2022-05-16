@@ -42,8 +42,43 @@ def getUser(line):
     user = separate[1].split("!", 1)[0]
     return user
 
+def getMessage(line):
+    global message
+    try:
+        message = (line.split(":",2))[2]
+    except:
+        message = ""
+    return message
+
+def Console(line):
+    if "" in line:
+        return False
+    else:
+        return True
+
 
 joinchat()
+
+while True:
+        try:
+            readbuffer = irc.recv(1024).decode()
+        except:
+            readbuffer = ""
+        for line in readbuffer.split("\r\n"):
+            if line == "":
+                continue
+            elif "PING" in line and Console(line):
+                msgg = " \r\n".encode()
+                irc.send(msgg)
+                print(msgg)
+                continue
+            else:
+                print(line)
+                user = getUser(line)
+                message = getMessage(line)
+                print(user + " : " + message)
+
+
 
 # while True:
 #     try:
