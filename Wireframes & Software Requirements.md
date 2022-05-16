@@ -1,4 +1,4 @@
-# Twich- Plays
+# Twitch- Plays
 - Allows the viewers from a twitch stream to control the game from a chatbox. 
 
 **User Stories** 
