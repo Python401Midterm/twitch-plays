@@ -1,4 +1,7 @@
 import socket
+import re
+from dotenv import load_dotenv
+from game_controls import controls
 
 SERVER = 'irc.twitch.tv'
 PORT = 6667
@@ -42,52 +45,47 @@ def getUser(line):
     user = separate[1].split("!", 1)[0]
     return user
 
-def getMessage(line):
-    global message
-    try:
-        message = (line.split(":",2))[2]
-    except:
-        message = ""
-    return message
+def parse_message(twitch_response):
+  '''
+  Accepts the twitch response string and parses it to return only what the user typed in.
+  '''
+  if twitch_response == "":
+    message = ""
+  else:
+    pattern = r".:(.*)$"
+    message = re.search(pattern, twitch_response).group(1)
 
-def Console(line):
-    if "" in line:
-        return False
-    else:
-        return True
+  return message
+
+def user_message(twitch_response):
+  '''
+  returns True if the twitch_response from twitch contains "PRIVMSG" and False otherwise. "PRIVMSG" in the twitch_response means that it is from a user and not the server.
+  '''
+  if "PRIVMSG" in twitch_response:
+    return True
+  else:
+    return False
 
 
 joinchat()
 
-while True:
+
+
+def receiving_loop():
+    global response
+    while True:
         try:
-            readbuffer = irc.recv(1024).decode()
+            received = irc.recv(1024).decode()
         except:
-            readbuffer = ""
-        for line in readbuffer.split("\r\n"):
-            if line == "":
-                continue
-            elif "PING" in line and Console(line):
-                msgg = " \r\n".encode()
-                irc.send(msgg)
-                print(msgg)
-                continue
+            received = ""
+
+        for line in received.split("\r\n"):
+            if "PING" in line and not user_message(line):
+                response = "PONG.tmi.twitch.tv\r\n".encode()
+                irc.send(response)
             else:
-                print(line)
-                user = getUser(line)
-                message = getMessage(line)
-                print(user + " : " + message)
+                response = parse_message(line)
 
 
 
-# while True:
-#     try:
-#         readbuffer = irc.recv(1024).decode()
-#     except:
-#         readbuffer = ""
-#     for line in readbuffer.split("\r\n"):
-#         if line == "":
-#             continue
-#         else:
-#             getUser(line)
-#             print(line)
+load_dotenv()
