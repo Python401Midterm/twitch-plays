@@ -19,7 +19,7 @@ def joinchat():
     while Loading:
         readbuffer_join = irc.recv(1024)
         readbuffer_join = readbuffer_join.decode()
-        for line in readbuffer_join.split("\n"):
+        for line in readbuffer_join.split("\n")[0:-1]:
             print(line)
             Loading = loadingComplete(line)
 
