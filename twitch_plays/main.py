@@ -1,8 +1,8 @@
 import socket
 import re
 from dotenv import load_dotenv
-from game_controls import controls
-from join_irc import Irc
+from twitch_plays.game_controls import controls
+from twitch_plays.join_irc import Irc
 import threading
 
 SERVER = 'irc.twitch.tv'
@@ -69,7 +69,7 @@ def user_message(twitch_response):
     return False
 
 
-joinchat()
+# joinchat()
 
 
 
@@ -93,7 +93,8 @@ def receiving_loop():
 load_dotenv()
 
 if __name__ == "__main__":
-    One = threading.Thread(target = Irc())
+    irc = Irc()
+    One = threading.Thread(target = irc.connect_server)
     One.start()
-    Two = threading.Thread(target = controls)
+    Two = threading.Thread(target = irc.controls)
     Two.start()

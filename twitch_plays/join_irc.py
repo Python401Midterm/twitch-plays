@@ -2,6 +2,7 @@ import os
 import re
 import sys
 import socket
+import pyautogui
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -17,7 +18,7 @@ class Irc:
         self.botowner = os.getenv("BOTOWNER")
         self.bot_owner_oauth = os.getenv("BOTOWNERAUTH")
         self.irc = socket.socket()
-        self.connect_server()
+        # self.connect_server()
         self.response = ""
 
 
@@ -95,6 +96,32 @@ class Irc:
             return True
         else:
             return False
+
+    
+    def controls(self):
+        while True:
+            self.response = self.response.lower()
+            if self.response == "up":
+                pyautogui.keyDown("up")
+                pyautogui.keyUp("up")
+            elif self.response == "down":
+                pyautogui.keyDown("down")
+                pyautogui.keyUp("down")
+            elif self.response == "left":
+                pyautogui.keyDown("left")
+                pyautogui.keyUp("left")
+            elif self.response == "right":
+                pyautogui.keyDown("right")
+                pyautogui.keyUp("right")
+            elif self.response == "a":
+                pyautogui.keyDown("s")
+                pyautogui.keyUp("s")
+            elif self.response == "b":
+                pyautogui.keyDown("a")
+                pyautogui.keyUp("a")
+            elif self.response == "start":
+                pyautogui.keyDown("enter")
+                pyautogui.keyUp("enter")
 
 
     def receiving_loop(self):
