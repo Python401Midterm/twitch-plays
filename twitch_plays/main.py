@@ -57,8 +57,6 @@ def Console(line):
         return True
 
 
-
-
 joinchat()
 
 while True:
@@ -70,7 +68,7 @@ while True:
             if line == "":
                 continue
             elif "PING" in line and Console(line):
-                msgg = "PONG tmi.twitch.tv\r\n".encode()
+                msgg = " \r\n".encode()
                 irc.send(msgg)
                 print(msgg)
                 continue
