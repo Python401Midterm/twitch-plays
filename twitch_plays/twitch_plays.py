@@ -22,4 +22,22 @@ def parse_message(twitch_response):
 
   return message
 
+def receiving_loop():
+  global response
+  while True:
+    try:
+      received = irc.recv(1024).decode()
+    except:
+      received = ""
+    
+    for line in recived.split("\r\n"):
+      if "PONG" in line and not user_message(line):
+        response = "PONG.tmi.twitch.tv\r\n".encode()
+        irc.send(response)
+      else:
+        response = parse_message(line)
+    
+    
+
+
 load_dotenv()
