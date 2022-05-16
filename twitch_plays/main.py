@@ -27,9 +27,32 @@ def joinchat():
 def loadingComplete(line):
     if "End of /NAMES list" in line:
         print('Bot has joined' + CHANNEL + "'s Channel")
+        sendMessage(irc, "Chat Room Joined")
+
         return False
     else:
         return True
 
+def sendMessage(irc, message):
+    messageTemp = "PRIVMSG #" + CHANNEL + " :" + message
+    irc.send((messageTemp + "\n").encode())
+
+def getUser(line):
+    separate = line.split(":", 2)
+    user = separate[1].split("!", 1)[0]
+    return user
+
 
 joinchat()
+
+# while True:
+#     try:
+#         readbuffer = irc.recv(1024).decode()
+#     except:
+#         readbuffer = ""
+#     for line in readbuffer.split("\r\n"):
+#         if line == "":
+#             continue
+#         else:
+#             getUser(line)
+#             print(line)
