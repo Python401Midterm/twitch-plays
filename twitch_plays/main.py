@@ -2,6 +2,8 @@ import socket
 import re
 from dotenv import load_dotenv
 from game_controls import controls
+from join_irc import Irc
+import threading
 
 SERVER = 'irc.twitch.tv'
 PORT = 6667
@@ -89,3 +91,9 @@ def receiving_loop():
 
 
 load_dotenv()
+
+if __name__ == "__main__":
+    One = threading.Thread(target = Irc())
+    One.start()
+    Two = threading.Thread(target = controls)
+    Two.start()
