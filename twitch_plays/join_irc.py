@@ -55,12 +55,14 @@ class Irc:
             readbuffer_join = self.irc.recv(1024)
             chat = readbuffer_join.decode()
             for line in chat.split("\n"):
-                print(line)
+                if line == '':
+                    continue
                 loading = self.loadingComplete(line)
+                print(loading)
         if loading == False:
             self.receiving_loop()
             
-    def loadingComplete(self, line):
+    def loadingComplete(self, line): 
         if "End of /NAMES list" in line:
             print('Bot has joined' + self.channel + "'s Channel")           
             return False
@@ -98,30 +100,31 @@ class Irc:
             return False
 
     
-    def controls(self):
-        while True:
-            self.response = self.response.lower()
-            if self.response == "up":
-                pyautogui.keyDown("up")
-                pyautogui.keyUp("up")
-            elif self.response == "down":
-                pyautogui.keyDown("down")
-                pyautogui.keyUp("down")
-            elif self.response == "left":
-                pyautogui.keyDown("left")
-                pyautogui.keyUp("left")
-            elif self.response == "right":
-                pyautogui.keyDown("right")
-                pyautogui.keyUp("right")
-            elif self.response == "a":
-                pyautogui.keyDown("s")
-                pyautogui.keyUp("s")
-            elif self.response == "b":
-                pyautogui.keyDown("a")
-                pyautogui.keyUp("a")
-            elif self.response == "start":
-                pyautogui.keyDown("enter")
-                pyautogui.keyUp("enter")
+    def controls(self, response):
+        response = response.lower()
+        if response == "up":
+            pyautogui.keyDown("up")
+            pyautogui.keyUp("up")
+        elif response == "down":
+            pyautogui.keyDown("down")
+            pyautogui.keyUp("down")
+        elif response == "left":
+            pyautogui.keyDown("left")
+            pyautogui.keyUp("left")
+        elif response == "right":
+            pyautogui.keyDown("right")
+            pyautogui.keyUp("right")
+        elif response == "a":
+            pyautogui.keyDown("s")
+            pyautogui.keyUp("s")
+            print("press a")
+        elif response == "b":
+            pyautogui.keyDown("a")
+            pyautogui.keyUp("a")
+            print("press b")
+        elif response == "start":
+            pyautogui.keyDown("enter")
+            pyautogui.keyUp("enter")
 
 
     def receiving_loop(self):
@@ -137,3 +140,4 @@ class Irc:
                     self.irc.send(self.response)
                 else:
                     self.response = self.parse_message(line)
+                    self.controls(self.response)

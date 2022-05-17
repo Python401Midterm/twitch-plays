@@ -94,7 +94,8 @@ load_dotenv()
 
 if __name__ == "__main__":
     irc = Irc()
-    One = threading.Thread(target = irc.connect_server)
-    One.start()
-    Two = threading.Thread(target = irc.controls)
-    Two.start()
+    irc.connect_server()
+    # One = threading.Thread(target = irc.connect_server)
+    # One.start()
+    # Two = threading.Thread(target = irc.controls)
+    # Two.start()
