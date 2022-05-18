@@ -140,3 +140,4 @@ class Irc:
                     self.irc.send(self.response)
                 else:
                     self.response = self.parse_message(line)
+                    self.controls(self.response)
