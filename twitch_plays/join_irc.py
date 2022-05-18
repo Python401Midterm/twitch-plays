@@ -1,5 +1,6 @@
 import os
 import re
+from shutil import ExecError
 import sys
 import socket
 import pyautogui
@@ -20,7 +21,7 @@ class Irc:
         self.irc = socket.socket()
         # self.connect_server()
         self.response = ""
-
+        self.blacklist = []
 
 
     def connect_server(self):
@@ -35,10 +36,11 @@ class Irc:
             "NICK " + self.botname + "\n " +
             "JOIN #" + self.channel + "\n"
             ).encode())
-
+            irc.send("CAP REQ :twitch.tv/commands\n".encode())
             self.joinchat()
 
-        except:
+        except(Exception):
+            raise Exception
             print("Error Connecting to IRC Server")
             if self.connect_attempt < 2:
                 self.connect_attempt += 1
@@ -55,7 +57,8 @@ class Irc:
             readbuffer_join = self.irc.recv(1024)
             chat = readbuffer_join.decode()
             for line in chat.split("\n"):
-                if line == '':
+                print(line)
+                if line == '' or 'CAP' in line:
                     continue
                 loading = self.loadingComplete(line)
                 print(loading)
@@ -71,17 +74,22 @@ class Irc:
 
     def sendMessage(self, message):
         messageTemp = "PRIVMSG #" + self.channel + " :" + message
+        print(messageTemp)
         self.irc.send((messageTemp + "\n").encode())
 
     def getUser(self, line):
-        separate = line.split(":", 2)
-        user = separate[1].split("!", 1)[0]
-        return user
+        # separate = line.split(":", 2)
+        # user = separate[1].split("!", 1)[0]
+        # return user
+        pattern = r":(.*)!" #:(.*)!
+        userName = re.search(pattern, line).group(1)
+        return userName
 
     def parse_message(self, twitch_response):
         '''
         Accepts the twitch response string and parses it to return only what the user typed in.
         '''
+        print(twitch_response)
         if twitch_response == "":
             message = ""
         else:
@@ -102,6 +110,7 @@ class Irc:
     
     def controls(self, response):
         response = response.lower()
+        response = response.strip()
         if response == "up":
             pyautogui.keyDown("up")
             pyautogui.keyUp("up")
@@ -135,9 +144,37 @@ class Irc:
                 received = ""
 
             for line in received.split("\r\n"):
+                if line == "":
+                    continue
                 if "PING" in line and not self.user_message(line):
                     self.response = "PONG.tmi.twitch.tv\r\n".encode()
                     self.irc.send(self.response)
                 else:
                     self.response = self.parse_message(line)
+                    print(line, "yes")
+                    user = self.getUser(line)
+                    if self.blacklist:
+                        for word in self.blacklist:
+                            if word in self.response.lower():
+                                # self.sendMessage(f"/timeout {user} 60")
+                                self.sendMessage("/slow 5")
+                    if "blacklistMe" in self.response:
+                        self.blacklist_word(self.response)
                     self.controls(self.response)
+
+    def blacklist_word(self, message):
+        pattern = r"blacklistMe\((\w*)\)"
+        word = re.search(pattern, message).group(1)
+        self.blacklist.append(word.lower())
+        print(self.blacklist)
+
+    def blacklist_in_response(self, word):
+        if word in self.response:
+            return True
+        else: 
+            return False
+
+    def timeout_user(self):
+        pass
+        
+
