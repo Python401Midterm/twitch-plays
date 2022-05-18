@@ -38,7 +38,8 @@ class Irc:
 
             self.joinchat()
 
-        except:
+        except(Exception):
+            raise Exception
             print("Error Connecting to IRC Server")
             if self.connect_attempt < 2:
                 self.connect_attempt += 1
@@ -55,6 +56,8 @@ class Irc:
             readbuffer_join = self.irc.recv(1024)
             chat = readbuffer_join.decode()
             for line in chat.split("\n"):
+                if line == "":
+                    continue
                 print(line)
                 loading = self.loadingComplete(line)
         if loading == False:
