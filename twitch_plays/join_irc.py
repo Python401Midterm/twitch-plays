@@ -101,30 +101,30 @@ class Irc:
             return False
 
     
-    def controls(self):
-        while True:
-            self.response = self.response.lower()
-            if self.response == "up":
-                pyautogui.keyDown("up")
-                pyautogui.keyUp("up")
-            elif self.response == "down":
-                pyautogui.keyDown("down")
-                pyautogui.keyUp("down")
-            elif self.response == "left":
-                pyautogui.keyDown("left")
-                pyautogui.keyUp("left")
-            elif self.response == "right":
-                pyautogui.keyDown("right")
-                pyautogui.keyUp("right")
-            elif self.response == "a":
-                pyautogui.keyDown("s")
-                pyautogui.keyUp("s")
-            elif self.response == "b":
-                pyautogui.keyDown("a")
-                pyautogui.keyUp("a")
-            elif self.response == "start":
-                pyautogui.keyDown("enter")
-                pyautogui.keyUp("enter")
+    def controls(self, response):
+        response = response.lower()
+        response = response.strip()
+        if response == "up":
+            pyautogui.keyDown("up")
+            pyautogui.keyUp("up")
+        elif response == "down":
+            pyautogui.keyDown("down")
+            pyautogui.keyUp("down")
+        elif response == "left":
+            pyautogui.keyDown("left")
+            pyautogui.keyUp("left")
+        elif response == "right":
+            pyautogui.keyDown("right")
+            pyautogui.keyUp("right")
+        elif response == "a":
+            pyautogui.keyDown("s")
+            pyautogui.keyUp("s")
+        elif response == "b":
+            pyautogui.keyDown("a")
+            pyautogui.keyUp("a")
+        elif response == "start":
+            pyautogui.keyDown("enter")
+            pyautogui.keyUp("enter")
 
 
     def receiving_loop(self):
