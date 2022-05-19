@@ -163,7 +163,6 @@ class Irc:
                     self.irc.send(self.response)
                 else:
                     self.response = self.parse_message(line)
-                    print(line, "yes")
                     from_bot = bool(re.search(r"^PRIVMSG", line))
                     from_server = bool(re.search(r"^:tmi", line))
                     if from_bot or from_server:
@@ -172,8 +171,7 @@ class Irc:
                     if self.blacklist:
                         for word in self.blacklist:
                             if word in self.response.lower():
-                                self.sendMessage(f"/help")
-                                # self.sendMessage(f"@{user} you've used a blacklisted word. This is a warning. Please don't use any blacklisted words.")
+                                self.sendMessage(f"@{user} you've used a blacklisted word. This is a warning. Please don't use any blacklisted words.")
                     if "blacklistMe" in self.response:
                         self.blacklist_word(self.response)
                     self.controls(self.response)
