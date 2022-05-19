@@ -83,7 +83,12 @@ class Irc:
         # user = separate[1].split("!", 1)[0]
         # return user
         pattern = r":(.*)!" #:(.*)!
-        userName = re.search(pattern, line).group(1)
+        userName = re.search(pattern, line)
+        if userName:
+            userName = userName.group(1)
+        else:
+            userName = ""
+
         return userName
 
     def parse_message(self, twitch_response):
@@ -97,7 +102,11 @@ class Irc:
             message = ""
         else:
             pattern = r".:(.*)$"
-            message = re.search(pattern, twitch_response).group(1)
+            message = re.search(pattern, twitch_response)
+            if message:
+                message = message.group(1)
+            else:
+                message = ''
 
         return message
 
@@ -170,18 +179,12 @@ class Irc:
                     self.controls(self.response)
 
     def blacklist_word(self, message):
+        if not 'blacklistMe(' in message:
+            return
         pattern = r"blacklistMe\((\w*)\)"
         word = re.search(pattern, message).group(1)
         self.blacklist.append(word.lower())
         print(self.blacklist)
 
-    def blacklist_in_response(self, word):
-        if word in self.response:
-            return True
-        else: 
-            return False
-
-    def timeout_user(self):
-        pass
         
 
