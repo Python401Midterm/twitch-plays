@@ -8,7 +8,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-class Irc:  
+
+class Irc:
 
     def __init__(self):
         self.connect_attempt = 0
@@ -23,19 +24,18 @@ class Irc:
         self.response = ""
         self.blacklist = []
 
-
     def connect_server(self):
 
         irc = self.irc
 
         irc.settimeout(15)
-        
+
         try:
             irc.connect((self.server, self.port))
-            irc.send(( "PASS " + self.bot_owner_oauth + "\n" +
-            "NICK " + self.botname + "\n " +
-            "JOIN #" + self.channel + "\n"
-            ).encode())
+            irc.send(("PASS " + self.bot_owner_oauth + "\n" +
+                      "NICK " + self.botname + "\n " +
+                      "JOIN #" + self.channel + "\n"
+                      ).encode())
             irc.send("CAP REQ :twitch.tv/commands\n".encode())
             self.joinchat()
 
@@ -48,7 +48,6 @@ class Irc:
                 return self.connect_server()
             else:
                 sys.exit()
-
 
     def joinchat(self):
         print("Establishing connection...")
@@ -63,12 +62,12 @@ class Irc:
                 loading = self.loadingComplete(line)
                 print(loading)
         if loading == False:
-            self.sendMessage("The bot has joined the chat! contols: a, b, up, down, left, right. To blacklist a word type 'blacklistMe(word).'")
+            self.sendMessage("The bot has joined the chat! To blacklist a word type 'blacklistMe(word).'")
             self.receiving_loop()
             
     def loadingComplete(self, line): 
         if "End of /NAMES list" in line:
-            print('Bot has joined' + self.channel + "'s Channel")           
+            print('Bot has joined' + self.channel + "'s Channel")
             return False
         else:
             return True
@@ -119,7 +118,6 @@ class Irc:
         else:
             return False
 
-    
     def controls(self, response):
         response = response.lower()
         response = response.strip()
@@ -174,7 +172,6 @@ class Irc:
             pyautogui.keyDown("enter")
             pyautogui.keyUp("enter")
 
-
     def receiving_loop(self):
         while True:
             try:
@@ -210,6 +207,3 @@ class Irc:
         word = re.search(pattern, message).group(1)
         self.blacklist.append(word.lower())
         print(self.blacklist)
-
-        
-
