@@ -1,4 +1,4 @@
-# Twich- Plays
+# Twitch- Plays
 - Allows the viewers from a twitch stream to control the game from a chatbox. 
 
 **User Stories** 
@@ -8,6 +8,9 @@
 - As a streamer I want the audience in the chat to control my character.
 - As a streamer, I want the chat to have access to my keyboard through the chat.
 
+**Wireframe**
+- https://docs.google.com/document/d/1wTUXLzbkznS0PeD-l53366G3KhhEsgeLugkvwtLj52k/edit?usp=sharing
+- 
 **Project Management Board**
 - https://trello.com/b/AAe3LLhV/401-midterm-project
 
