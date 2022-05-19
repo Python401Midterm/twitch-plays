@@ -7,7 +7,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-class Irc:  
+
+class Irc:
 
     def __init__(self):
         self.connect_attempt = 0
@@ -21,20 +22,18 @@ class Irc:
         # self.connect_server()
         self.response = ""
 
-
-
     def connect_server(self):
 
         irc = self.irc
 
         irc.settimeout(15)
-        
+
         try:
             irc.connect((self.server, self.port))
-            irc.send(( "PASS " + self.bot_owner_oauth + "\n" +
-            "NICK " + self.botname + "\n " +
-            "JOIN #" + self.channel + "\n"
-            ).encode())
+            irc.send(("PASS " + self.bot_owner_oauth + "\n" +
+                      "NICK " + self.botname + "\n " +
+                      "JOIN #" + self.channel + "\n"
+                      ).encode())
 
             self.joinchat()
 
@@ -47,7 +46,6 @@ class Irc:
                 return self.connect_server()
             else:
                 sys.exit()
-
 
     def joinchat(self):
         print("Establishing connection...")
@@ -62,10 +60,10 @@ class Irc:
                 loading = self.loadingComplete(line)
         if loading == False:
             self.receiving_loop()
-            
+
     def loadingComplete(self, line):
         if "End of /NAMES list" in line:
-            print('Bot has joined' + self.channel + "'s Channel")           
+            print('Bot has joined' + self.channel + "'s Channel")
             return False
         else:
             return True
@@ -100,10 +98,10 @@ class Irc:
         else:
             return False
 
-    
     def controls(self, response):
         response = response.lower()
         response = response.strip()
+        # directions
         if response == "up":
             pyautogui.keyDown("up")
             pyautogui.keyUp("up")
@@ -116,16 +114,43 @@ class Irc:
         elif response == "right":
             pyautogui.keyDown("right")
             pyautogui.keyUp("right")
-        elif response == "a":
+        elif response == "w":
+            pyautogui.keyDown("w")
+            pyautogui.keyUp("w")
+        elif response == "s":
             pyautogui.keyDown("s")
             pyautogui.keyUp("s")
-        elif response == "b":
+        elif response == "a":
             pyautogui.keyDown("a")
             pyautogui.keyUp("a")
-        elif response == "start":
+        elif response == "d":
+            pyautogui.keyDown("d")
+            pyautogui.keyUp("d")
+            # actions
+        elif response == "b":
+            pyautogui.keyDown("b")
+            pyautogui.keyUp("b")
+        elif response == "1":
+            pyautogui.keyDown("1")
+            pyautogui.keyUp("1")
+        elif response == "2":
+            pyautogui.keyDown("2")
+            pyautogui.keyUp("2")
+        elif response == "3":
+            pyautogui.keyDown("3")
+            pyautogui.keyUp("3")
+        elif response == "4":
+            pyautogui.keyDown("4")
+            pyautogui.keyUp("4")
+        elif response == "5":
+            pyautogui.keyDown("5")
+            pyautogui.keyUp("5")
+        elif response == "tab":
+            pyautogui.keyDown("tab")
+            pyautogui.keyUp("tab")
+        elif response == "enter":
             pyautogui.keyDown("enter")
             pyautogui.keyUp("enter")
-
 
     def receiving_loop(self):
         while True:
