@@ -63,6 +63,7 @@ class Irc:
                 loading = self.loadingComplete(line)
                 print(loading)
         if loading == False:
+            self.sendMessage("The bot has joined the chat! contols: a, b, up, down, left, right. To blacklist a word type 'blacklistMe(word).'")
             self.receiving_loop()
             
     def loadingComplete(self, line): 
@@ -90,7 +91,9 @@ class Irc:
         Accepts the twitch response string and parses it to return only what the user typed in.
         '''
         print(twitch_response)
-        if twitch_response == "":
+        from_bot = bool(re.search(r"^PRIVMSG", twitch_response))
+        from_server = bool(re.search(r"^:tmi", twitch_response))
+        if twitch_response == "" or from_bot or from_server:
             message = ""
         else:
             pattern = r".:(.*)$"
@@ -152,12 +155,16 @@ class Irc:
                 else:
                     self.response = self.parse_message(line)
                     print(line, "yes")
+                    from_bot = bool(re.search(r"^PRIVMSG", line))
+                    from_server = bool(re.search(r"^:tmi", line))
+                    if from_bot or from_server:
+                        continue
                     user = self.getUser(line)
                     if self.blacklist:
                         for word in self.blacklist:
                             if word in self.response.lower():
-                                # self.sendMessage(f"/timeout {user} 60")
-                                self.sendMessage("/slow 5")
+                                self.sendMessage(f"/help")
+                                # self.sendMessage(f"@{user} you've used a blacklisted word. This is a warning. Please don't use any blacklisted words.")
                     if "blacklistMe" in self.response:
                         self.blacklist_word(self.response)
                     self.controls(self.response)
