@@ -20,6 +20,7 @@ class Irc:
         self.irc = socket.socket()
         # self.connect_server()
         self.response = ""
+        self.blacklist = []
 
 
 
@@ -104,6 +105,7 @@ class Irc:
     def controls(self, response):
         response = response.lower()
         response = response.strip()
+        # directions
         if response == "up":
             pyautogui.keyDown("up")
             pyautogui.keyUp("up")
@@ -116,13 +118,41 @@ class Irc:
         elif response == "right":
             pyautogui.keyDown("right")
             pyautogui.keyUp("right")
-        elif response == "a":
+        elif response == "w":
+            pyautogui.keyDown("w")
+            pyautogui.keyUp("w")
+        elif response == "s":
             pyautogui.keyDown("s")
             pyautogui.keyUp("s")
-        elif response == "b":
+        elif response == "a":
             pyautogui.keyDown("a")
             pyautogui.keyUp("a")
-        elif response == "start":
+        elif response == "d":
+            pyautogui.keyDown("d")
+            pyautogui.keyUp("d")
+            # actions
+        elif response == "b":
+            pyautogui.keyDown("b")
+            pyautogui.keyUp("b")
+        elif response == "1":
+            pyautogui.keyDown("1")
+            pyautogui.keyUp("1")
+        elif response == "2":
+            pyautogui.keyDown("2")
+            pyautogui.keyUp("2")
+        elif response == "3":
+            pyautogui.keyDown("3")
+            pyautogui.keyUp("3")
+        elif response == "4":
+            pyautogui.keyDown("4")
+            pyautogui.keyUp("4")
+        elif response == "5":
+            pyautogui.keyDown("5")
+            pyautogui.keyUp("5")
+        elif response == "tab":
+            pyautogui.keyDown("tab")
+            pyautogui.keyUp("tab")
+        elif response == "enter":
             pyautogui.keyDown("enter")
             pyautogui.keyUp("enter")
 
@@ -151,8 +181,7 @@ class Irc:
                     if self.blacklist:
                         for word in self.blacklist:
                             if word in self.response.lower():
-                                self.sendMessage(f"/help")
-                                # self.sendMessage(f"@{user} you've used a blacklisted word. This is a warning. Please don't use any blacklisted words.")
+                                self.sendMessage(f"@{user} you've used a blacklisted word. This is a warning. Please don't use any blacklisted words.")
                     if "blacklistMe" in self.response:
                         self.blacklist_word(self.response)
                     self.controls(self.response)
