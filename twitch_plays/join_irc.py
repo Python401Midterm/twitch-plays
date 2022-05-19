@@ -1,5 +1,6 @@
 import os
 import re
+from shutil import ExecError
 import sys
 import socket
 import pyautogui
@@ -23,7 +24,6 @@ class Irc:
         self.blacklist = []
 
 
-
     def connect_server(self):
 
         irc = self.irc
@@ -36,7 +36,7 @@ class Irc:
             "NICK " + self.botname + "\n " +
             "JOIN #" + self.channel + "\n"
             ).encode())
-
+            irc.send("CAP REQ :twitch.tv/commands\n".encode())
             self.joinchat()
 
         except(Exception):
@@ -57,14 +57,16 @@ class Irc:
             readbuffer_join = self.irc.recv(1024)
             chat = readbuffer_join.decode()
             for line in chat.split("\n"):
-                if line == "":
-                    continue
                 print(line)
+                if line == '' or 'CAP' in line:
+                    continue
                 loading = self.loadingComplete(line)
+                print(loading)
         if loading == False:
+            self.sendMessage("The bot has joined the chat! contols: a, b, up, down, left, right. To blacklist a word type 'blacklistMe(word).'")
             self.receiving_loop()
             
-    def loadingComplete(self, line):
+    def loadingComplete(self, line): 
         if "End of /NAMES list" in line:
             print('Bot has joined' + self.channel + "'s Channel")           
             return False
@@ -73,22 +75,38 @@ class Irc:
 
     def sendMessage(self, message):
         messageTemp = "PRIVMSG #" + self.channel + " :" + message
+        print(messageTemp)
         self.irc.send((messageTemp + "\n").encode())
 
     def getUser(self, line):
-        separate = line.split(":", 2)
-        user = separate[1].split("!", 1)[0]
-        return user
+        # separate = line.split(":", 2)
+        # user = separate[1].split("!", 1)[0]
+        # return user
+        pattern = r":(.*)!" #:(.*)!
+        userName = re.search(pattern, line)
+        if userName:
+            userName = userName.group(1)
+        else:
+            userName = ""
+
+        return userName
 
     def parse_message(self, twitch_response):
         '''
         Accepts the twitch response string and parses it to return only what the user typed in.
         '''
-        if twitch_response == "":
+        print(twitch_response)
+        from_bot = bool(re.search(r"^PRIVMSG", twitch_response))
+        from_server = bool(re.search(r"^:tmi", twitch_response))
+        if twitch_response == "" or from_bot or from_server:
             message = ""
         else:
             pattern = r".:(.*)$"
-            message = re.search(pattern, twitch_response).group(1)
+            message = re.search(pattern, twitch_response)
+            if message:
+                message = message.group(1)
+            else:
+                message = ''
 
         return message
 
@@ -172,7 +190,6 @@ class Irc:
                     self.irc.send(self.response)
                 else:
                     self.response = self.parse_message(line)
-                    print(line, "yes")
                     from_bot = bool(re.search(r"^PRIVMSG", line))
                     from_server = bool(re.search(r"^:tmi", line))
                     if from_bot or from_server:
@@ -193,3 +210,6 @@ class Irc:
         word = re.search(pattern, message).group(1)
         self.blacklist.append(word.lower())
         print(self.blacklist)
+
+        
+
