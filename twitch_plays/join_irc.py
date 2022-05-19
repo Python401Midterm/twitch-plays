@@ -135,9 +135,32 @@ class Irc:
                 received = ""
 
             for line in received.split("\r\n"):
+                if line == "":
+                    continue
                 if "PING" in line and not self.user_message(line):
                     self.response = "PONG.tmi.twitch.tv\r\n".encode()
                     self.irc.send(self.response)
                 else:
                     self.response = self.parse_message(line)
+                    print(line, "yes")
+                    from_bot = bool(re.search(r"^PRIVMSG", line))
+                    from_server = bool(re.search(r"^:tmi", line))
+                    if from_bot or from_server:
+                        continue
+                    user = self.getUser(line)
+                    if self.blacklist:
+                        for word in self.blacklist:
+                            if word in self.response.lower():
+                                self.sendMessage(f"/help")
+                                # self.sendMessage(f"@{user} you've used a blacklisted word. This is a warning. Please don't use any blacklisted words.")
+                    if "blacklistMe" in self.response:
+                        self.blacklist_word(self.response)
                     self.controls(self.response)
+
+    def blacklist_word(self, message):
+        if not 'blacklistMe(' in message:
+            return
+        pattern = r"blacklistMe\((\w*)\)"
+        word = re.search(pattern, message).group(1)
+        self.blacklist.append(word.lower())
+        print(self.blacklist)
